@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Bounce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        
+        <!-- UI Layer -->
+        <div id="ui-layer">
+            <div id="hud" class="hidden">
+                <div class="score">Score: <span id="score-val">0</span></div>
+            </div>
+            
+            <div id="main-menu" class="screen">
+                <h1>Neon Bounce</h1>
+                <p>Use Left/Right Arrows to move.</p>
+                <button id="start-btn">Start Game</button>
+            </div>
+            
+            <div id="game-over" class="screen hidden">
+                <h1>Game Over</h1>
+                <p>Final Score: <span id="final-score">0</span></p>
+                <button id="restart-btn">Play Again</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
