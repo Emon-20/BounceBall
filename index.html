@@ -2,35 +2,92 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Bounce</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Neon Bounce — Rolling Ball Platformer</title>
+    <meta name="description" content="A vibrant neon rolling ball platformer with 5 levels of increasing challenge. Collect rings, dodge hazards, and reach the exit!">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
         <canvas id="game-canvas"></canvas>
-        
-        <!-- UI Layer -->
-        <div id="ui-layer">
-            <div id="hud" class="hidden">
-                <div class="score">Score: <span id="score-val">0</span></div>
+
+        <!-- HUD Overlay -->
+        <div id="hud" class="hidden">
+            <div class="hud-left">
+                <div class="hud-item" id="hud-level">Level 1</div>
+                <div class="hud-item" id="hud-rings">
+                    <span class="ring-icon"></span>
+                    <span id="ring-count">0</span> / <span id="ring-total">5</span>
+                </div>
             </div>
-            
-            <div id="main-menu" class="screen">
-                <h1>Neon Bounce</h1>
-                <p>Use Left/Right Arrows to move.</p>
-                <button id="start-btn">Start Game</button>
+            <div class="hud-right">
+                <div class="hud-item" id="hud-score">Score: <span id="score-val">0</span></div>
             </div>
-            
-            <div id="game-over" class="screen hidden">
-                <h1>Game Over</h1>
-                <p>Final Score: <span id="final-score">0</span></p>
-                <button id="restart-btn">Play Again</button>
+        </div>
+
+        <!-- Unlock notification -->
+        <div id="unlock-notify" class="hidden">
+            <span>🔓 Exit Unlocked!</span>
+        </div>
+
+        <!-- On-screen touch controls -->
+        <div id="touch-controls" class="hidden">
+            <div class="touch-left-group">
+                <button class="touch-btn" id="btn-left" aria-label="Move Left">◀</button>
+                <button class="touch-btn" id="btn-right" aria-label="Move Right">▶</button>
+            </div>
+            <div class="touch-right-group">
+                <button class="touch-btn touch-btn-jump" id="btn-jump" aria-label="Jump">▲</button>
+            </div>
+        </div>
+
+        <!-- ===== SCREENS ===== -->
+
+        <!-- Main Menu -->
+        <div id="screen-menu" class="screen">
+            <div class="screen-content">
+                <h1 class="game-title">NEON<br><span class="title-accent">BOUNCE</span></h1>
+                <p class="subtitle">A Rolling Ball Platformer</p>
+                <button class="btn-primary" id="btn-play">Play</button>
+                <button class="btn-secondary" id="btn-levels">Select Level</button>
+            </div>
+            <div class="controls-hint">
+                <span>⌨️ Arrow Keys / WASD</span>
+                <span>📱 On-screen controls on mobile</span>
+            </div>
+        </div>
+
+        <!-- Level Select -->
+        <div id="screen-levels" class="screen hidden">
+            <div class="screen-content">
+                <h2>Select Level</h2>
+                <div class="level-grid" id="level-grid"></div>
+                <button class="btn-secondary" id="btn-back-menu">← Back</button>
+            </div>
+        </div>
+
+        <!-- Level Cleared -->
+        <div id="screen-cleared" class="screen hidden">
+            <div class="screen-content">
+                <h2 class="cleared-title">Level Cleared!</h2>
+                <p class="cleared-stats" id="cleared-stats"></p>
+                <button class="btn-primary" id="btn-next-level">Next Level →</button>
+                <button class="btn-secondary" id="btn-back-menu2">Menu</button>
+            </div>
+        </div>
+
+        <!-- Game Complete -->
+        <div id="screen-complete" class="screen hidden">
+            <div class="screen-content">
+                <h1 class="complete-title">🎉 You Win!</h1>
+                <p class="cleared-stats" id="complete-stats"></p>
+                <button class="btn-primary" id="btn-replay">Play Again</button>
+                <button class="btn-secondary" id="btn-complete-menu">Menu</button>
             </div>
         </div>
     </div>
-    
-    <script type="module" src="js/main.js"></script>
+
+    <script src="game.js"></script>
 </body>
 </html>
