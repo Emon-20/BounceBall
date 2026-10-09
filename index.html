@@ -2,92 +2,173 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Neon Bounce — Rolling Ball Platformer</title>
-    <meta name="description" content="A vibrant neon rolling ball platformer with 5 levels of increasing challenge. Collect rings, dodge hazards, and reach the exit!">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bounce Classic — RetroSphere Platformer</title>
+    <meta name="description" content="A polished web-based side-scrolling platformer featuring realistic bouncing physics, tool power-ups, coins, and nostalgic Nokia retro aesthetic.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game-container">
-        <canvas id="game-canvas"></canvas>
+    <div id="retro-cabinet">
+        <div id="game-container">
+            <canvas id="game-canvas"></canvas>
 
-        <!-- HUD Overlay -->
-        <div id="hud" class="hidden">
-            <div class="hud-left">
-                <div class="hud-item" id="hud-level">Level 1</div>
-                <div class="hud-item" id="hud-rings">
-                    <span class="ring-icon"></span>
-                    <span id="ring-count">0</span> / <span id="ring-total">5</span>
+            <!-- Heads-Up Display (HUD) -->
+            <div id="hud" class="hidden">
+                <div class="hud-top-bar">
+                    <div class="hud-left">
+                        <div class="hud-badge level-badge" id="hud-level-name">Level 1</div>
+                        <div class="hud-badge coins-badge">
+                            <span class="hud-coin-icon"></span>
+                            <span id="coin-count">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Level Progress Track Bar -->
+                    <div class="hud-progress-container">
+                        <div class="progress-track">
+                            <div class="progress-fill" id="progress-bar-fill"></div>
+                            <div class="progress-ball" id="progress-ball-icon"></div>
+                        </div>
+                        <span class="progress-flag">🏁</span>
+                    </div>
+
+                    <div class="hud-right">
+                        <div class="hud-badge score-badge">
+                            <span class="badge-label">SCORE</span>
+                            <span id="score-val">0</span>
+                        </div>
+                        <button class="hud-btn-icon" id="btn-hud-pause" aria-label="Pause Game" title="Pause (P)">⏸</button>
+                    </div>
+                </div>
+
+                <!-- Active Tool Power-Up Countdown HUD -->
+                <div id="tool-timer-container" class="hidden" data-tool="growth">
+                    <div class="tool-icon-wrapper">
+                        <span id="tool-icon">▲</span>
+                    </div>
+                    <div class="tool-details">
+                        <div class="tool-header">
+                            <span id="tool-name">GROWTH</span>
+                            <span id="tool-time-text">10.0s</span>
+                        </div>
+                        <div class="tool-bar-track">
+                            <div class="tool-bar-fill" id="tool-bar-fill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile on-screen jump button -->
+                <button id="btn-screen-jump" class="screen-jump-btn" aria-label="Tap to Jump">
+                    <span>TAP TO JUMP</span>
+                </button>
+            </div>
+
+            <!-- ===== UI SCREENS ===== -->
+
+            <!-- Main Menu Screen -->
+            <div id="screen-menu" class="screen">
+                <div class="screen-content menu-content">
+                    <div class="logo-wrapper">
+                        <div class="logo-ball-anim"></div>
+                        <h1 class="game-title">BOUNCE<br><span class="title-accent">CLASSIC</span></h1>
+                        <p class="subtitle">RETROSPHERE ODYSSEY</p>
+                    </div>
+
+                    <div class="menu-btn-group">
+                        <button class="btn-primary" id="btn-play">
+                            <span class="btn-icon">▶</span> START CAMPAIGN
+                        </button>
+                        <button class="btn-secondary" id="btn-levels">
+                            <span class="btn-icon">🗺️</span> SELECT LEVEL
+                        </button>
+                        <button class="btn-secondary btn-endless" id="btn-endless">
+                            <span class="btn-icon">⚡</span> ENDLESS RUSH
+                        </button>
+                    </div>
+
+                    <div class="settings-bar">
+                        <button class="pill-btn" id="btn-audio" title="Toggle Sound FX">🔊 SFX On</button>
+                        <button class="pill-btn" id="btn-music" title="Toggle Background Chiptune">🎶 BGM On</button>
+                        <button class="pill-btn" id="btn-theme" title="Cycle Retro Themes">🎨 Arcade</button>
+                        <button class="pill-btn" id="btn-scanlines" title="Toggle CRT Scanlines">📺 CRT</button>
+                    </div>
+
+                    <div class="controls-hint">
+                        <div class="hint-col">
+                            <strong>KEYBOARD</strong>
+                            <span>[SPACE] / [W] / [▲] Jump</span>
+                            <span>[P] Pause &bull; [R] Restart</span>
+                        </div>
+                        <div class="hint-col">
+                            <strong>TOUCH / MOUSE</strong>
+                            <span>Tap screen to Jump</span>
+                            <span>Quick responsive bounce</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="hud-right">
-                <div class="hud-item" id="hud-score">Score: <span id="score-val">0</span></div>
-            </div>
-        </div>
 
-        <!-- Unlock notification -->
-        <div id="unlock-notify" class="hidden">
-            <span>🔓 Exit Unlocked!</span>
-        </div>
-
-        <!-- On-screen touch controls -->
-        <div id="touch-controls" class="hidden">
-            <div class="touch-left-group">
-                <button class="touch-btn" id="btn-left" aria-label="Move Left">◀</button>
-                <button class="touch-btn" id="btn-right" aria-label="Move Right">▶</button>
+            <!-- Level Select Screen -->
+            <div id="screen-levels" class="screen hidden">
+                <div class="screen-content">
+                    <h2 class="screen-heading">SELECT LEVEL</h2>
+                    <div class="level-grid" id="level-grid"></div>
+                    <button class="btn-secondary" id="btn-back-menu">← BACK TO MENU</button>
+                </div>
             </div>
-            <div class="touch-right-group">
-                <button class="touch-btn touch-btn-jump" id="btn-jump" aria-label="Jump">▲</button>
-            </div>
-        </div>
 
-        <!-- ===== SCREENS ===== -->
-
-        <!-- Main Menu -->
-        <div id="screen-menu" class="screen">
-            <div class="screen-content">
-                <h1 class="game-title">NEON<br><span class="title-accent">BOUNCE</span></h1>
-                <p class="subtitle">A Rolling Ball Platformer</p>
-                <button class="btn-primary" id="btn-play">Play</button>
-                <button class="btn-secondary" id="btn-levels">Select Level</button>
+            <!-- Pause Screen -->
+            <div id="screen-pause" class="screen hidden backdrop-blur">
+                <div class="screen-content modal-card">
+                    <h2 class="screen-heading">GAME PAUSED</h2>
+                    <p class="modal-sub">Take a breather, sphere master!</p>
+                    <div class="menu-btn-group">
+                        <button class="btn-primary" id="btn-resume">▶ RESUME</button>
+                        <button class="btn-secondary" id="btn-restart-pause">🔄 RESTART LEVEL</button>
+                        <button class="btn-secondary" id="btn-menu-pause">🏠 MAIN MENU</button>
+                    </div>
+                </div>
             </div>
-            <div class="controls-hint">
-                <span>⌨️ Arrow Keys / WASD</span>
-                <span>📱 On-screen controls on mobile</span>
-            </div>
-        </div>
 
-        <!-- Level Select -->
-        <div id="screen-levels" class="screen hidden">
-            <div class="screen-content">
-                <h2>Select Level</h2>
-                <div class="level-grid" id="level-grid"></div>
-                <button class="btn-secondary" id="btn-back-menu">← Back</button>
+            <!-- Level Cleared Screen -->
+            <div id="screen-cleared" class="screen hidden backdrop-blur">
+                <div class="screen-content modal-card modal-celebrate">
+                    <div class="trophy-badge">🏆</div>
+                    <h2 class="screen-heading victory-heading">LEVEL COMPLETE!</h2>
+                    <div class="stars-row" id="cleared-stars">
+                        <span class="star-icon active">★</span>
+                        <span class="star-icon active">★</span>
+                        <span class="star-icon active">★</span>
+                    </div>
+                    <div class="stats-panel" id="cleared-stats"></div>
+                    <div class="menu-btn-group">
+                        <button class="btn-primary" id="btn-next-level">NEXT LEVEL →</button>
+                        <button class="btn-secondary" id="btn-replay-cleared">🔄 REPLAY</button>
+                        <button class="btn-secondary" id="btn-menu-cleared">🏠 MENU</button>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <!-- Level Cleared -->
-        <div id="screen-cleared" class="screen hidden">
-            <div class="screen-content">
-                <h2 class="cleared-title">Level Cleared!</h2>
-                <p class="cleared-stats" id="cleared-stats"></p>
-                <button class="btn-primary" id="btn-next-level">Next Level →</button>
-                <button class="btn-secondary" id="btn-back-menu2">Menu</button>
-            </div>
-        </div>
-
-        <!-- Game Complete -->
-        <div id="screen-complete" class="screen hidden">
-            <div class="screen-content">
-                <h1 class="complete-title">🎉 You Win!</h1>
-                <p class="cleared-stats" id="complete-stats"></p>
-                <button class="btn-primary" id="btn-replay">Play Again</button>
-                <button class="btn-secondary" id="btn-complete-menu">Menu</button>
+            <!-- Game Over Screen -->
+            <div id="screen-game-over" class="screen hidden backdrop-blur">
+                <div class="screen-content modal-card modal-gameover">
+                    <div class="hazard-badge">💥</div>
+                    <h2 class="screen-heading gameover-heading">BALL POPPED!</h2>
+                    <p class="modal-sub">Watch out for sharp spikes &amp; crushers!</p>
+                    <div class="stats-panel" id="game-over-stats"></div>
+                    <div class="menu-btn-group">
+                        <button class="btn-primary btn-retry" id="btn-retry">🔄 RETRY (R)</button>
+                        <button class="btn-secondary" id="btn-menu-gameover">🏠 MAIN MENU</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="game.js"></script>
+    <!-- ES Module Game Entry Point -->
+    <script type="module" src="js/game.js"></script>
 </body>
 </html>
